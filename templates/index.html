@@ -1,0 +1,91 @@
+<!doctype html>
+<html>
+<head>
+    <title>{{ app_name }}</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="wrap">
+    <h1>{{ app_name }}</h1>
+    <p class="sub">Technical SEO + AEO + GEO + Schema + Content + Internal Links + Real Backlink API Intelligence</p>
+
+    <form method="post" class="card form">
+        <input type="url" name="url" placeholder="https://example.com" value="{{ url }}" required>
+        <input type="number" name="max_pages" value="{{ max_pages }}" min="1" max="1000">
+        <button>Run Enterprise Audit</button>
+    </form>
+
+    {% if report %}
+    <div class="grid">
+        {% for label, score in report.scores.items() %}
+        <div class="score card">
+            <span>{{ label }}</span>
+            <strong>{{ score }}</strong>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="card">
+        <h2>Executive Summary</h2>
+        <p><b>Domain:</b> {{ report.root_domain }}</p>
+        <p><b>Pages Crawled:</b> {{ report.summary.pages }}</p>
+        <p><b>Total Issues:</b> {{ report.summary.issues }}</p>
+        <p><b>Internal Links:</b> {{ report.summary.internal_links }}</p>
+        <p><b>Crawl Errors:</b> {{ report.summary.errors }}</p>
+        <a class="btn" href="/export-csv">Export CSV</a>
+    </div>
+
+    <div class="card">
+        <h2>Backlink Intelligence</h2>
+        {% if report.backlinks.connected %}
+            <div class="backlink-grid">
+                <p><b>Provider:</b> DataForSEO</p>
+                <p><b>Referring Domains:</b> {{ report.backlinks.referring_domains }}</p>
+                <p><b>Backlinks:</b> {{ report.backlinks.backlinks }}</p>
+                <p><b>Dofollow:</b> {{ report.backlinks.dofollow }}</p>
+                <p><b>Nofollow:</b> {{ report.backlinks.nofollow }}</p>
+                <p><b>Rank:</b> {{ report.backlinks.rank }}</p>
+            </div>
+            {% if report.backlinks.anchors %}
+            <h3>Top Anchors</h3>
+            <table>
+                <tr><th>Anchor</th><th>Backlinks</th><th>Referring Domains</th></tr>
+                {% for a in report.backlinks.anchors %}
+                <tr><td>{{ a.anchor }}</td><td>{{ a.backlinks }}</td><td>{{ a.referring_domains }}</td></tr>
+                {% endfor %}
+            </table>
+            {% endif %}
+        {% else %}
+            <p><b>Status:</b> Not connected</p>
+            <p>{{ report.backlinks.note or report.backlinks.error }}</p>
+        {% endif %}
+    </div>
+
+    <div class="card">
+        <h2>Issues</h2>
+        {% for i in report.issues %}
+        <div class="issue {{ i.severity|lower }}">
+            <div class="issue-head">
+                <strong>{{ i.issue }}</strong>
+                <span>{{ i.severity }} · {{ i.category }}</span>
+            </div>
+            <p><b>URL:</b> {{ i.url }}</p>
+            {% if i.detail %}<p><b>Detail:</b> {{ i.detail }}</p>{% endif %}
+            {% if i.evidence %}<p><b>Evidence:</b> {{ i.evidence }}</p>{% endif %}
+            <details>
+                <summary>Client-ready explanation</summary>
+                <p><b>Why This Matters:</b> {{ i.why }}</p>
+                <p><b>Root Cause:</b> {{ i.root }}</p>
+                <p><b>How to Fix:</b> {{ i.fix }}</p>
+                <p><b>Developer Implementation:</b> {{ i.developer }}</p>
+                <p><b>AI Recommendation:</b> {{ i.ai }}</p>
+                <p><b>Best Practice:</b> {{ i.best }}</p>
+                <p><b>Reference:</b> {{ i.reference }}</p>
+            </details>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+</div>
+</body>
+</html>
