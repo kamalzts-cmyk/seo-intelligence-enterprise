@@ -1,9 +1,6 @@
 services:
   - type: web
-    name: seo-intelligence-pro-enterprise-v3
+    name: seo-intelligence-enterprise
     env: python
     buildCommand: pip install -r requirements.txt
-    startCommand: gunicorn app:app
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.9
+    startCommand: gunicorn --workers 1 --timeout 600 app:app
