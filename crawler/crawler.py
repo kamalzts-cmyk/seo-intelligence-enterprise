@@ -9,7 +9,7 @@ def fetch(url):
     try:
         res = requests.get(
             url,
-            timeout=REQUEST_TIMEOUT,
+            timeout=8,
             allow_redirects=True,
             headers={"User-Agent": USER_AGENT}
         )
